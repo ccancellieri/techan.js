@@ -1,5 +1,7 @@
 {
+  "esversion": 6,
   "globals": {
+    "esversion": 6,
     "d3": false
   },
   "node": true,
