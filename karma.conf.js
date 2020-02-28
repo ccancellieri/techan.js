@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: '.',
 
 
     // frameworks to use
@@ -26,8 +26,10 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'src/**/*.js': ['babel'],
+      'dist/**/*.js': ['babel'],
+      'test/**/*.js': ['babel']
     },
-
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -59,6 +61,14 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: true,
+
+    'plugins': ['karma-jasmine', 'karma-phantomjs-launcher', 'karma-babel-preprocessor'],
+
+    babelPreprocessor: {
+      options: {
+        presets: ['@babel/preset-env']
+      }
+    }
   });
 };

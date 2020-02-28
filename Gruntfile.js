@@ -29,7 +29,7 @@ module.exports = function(grunt) {
     filegen: {
       version: {
         options: {
-          content: "'use strict';module.exports='<%= pkg.version %>';"
+          content: "'use strict';export const version = '<%= pkg.version %>';"
         },
         dest: '<%= clean.build %>/version.js'
       }
@@ -40,12 +40,14 @@ module.exports = function(grunt) {
         debug: true,
         callback: function(browserify) {
           browserify.external('d3');
+          browserify.transform(["babelify", { presets: ["@babel/preset-env"] }], { _flags } );
           return browserify;
         }
       },
       dev: {
         options: {
-          standalone: 'techan'
+          standalone: 'techan',
+          debug: true
         },
         src: './src/techan.js',
         dest: '<%= clean.build %>/techan-bundle.js'
@@ -62,6 +64,7 @@ module.exports = function(grunt) {
           browserifyOptions: {
             standalone: 'techan'
           },
+          transform: [["babelify", { "presets": ["@babel/preset-env"] }]],
           external: ['d3']
         },
         src: './src/techan.js',
@@ -137,23 +140,24 @@ module.exports = function(grunt) {
       watch: {
         background: true,
         singleRun: false,
-        files: {
-          src: ['<%= config.dep.d3 %>', '<%= config.src.test.common %>', '<%= watchify.test.dest %>'] // Single browserify bundle that includes src under test
-        }
+        files: [
+          { src: ['<%= config.dep.d3 %>', '<%= config.src.test.common %>', '<%= watchify.test.dest %>'] //Single browserify bundle that includes src under test.
+          }
+        ]
       },
       test: {
         //background: true,
-        files: '<%= karma.watch.files %>'
+        files: ['<%= karma.watch.files %>']
       },
       dist: {
-        files: {
-          src: ['<%= config.dep.d3 %>', '<%= config.src.test.common %>', '<%= browserify.dist.dest %>', '<%= config.src.test.standalone %>']
-        }
+        files: [
+          { src: ['<%= config.dep.d3 %>', '<%= config.src.test.common %>', '<%= browserify.dist.dest %>', '<%= config.src.test.standalone %>'] }
+        ]
       },
       minify: {
-        files: {
-          src: ['<%= config.dep.d3 %>', '<%= config.src.test.common %>', '<%= uglify.dist.dest %>', '<%= config.src.test.standalone %>']
-        }
+        files: [
+          { src: ['<%= config.dep.d3 %>', '<%= config.src.test.common %>', '<%= uglify.dist.dest %>', '<%= config.src.test.standalone %>'] }
+        ]
       }
     },
 
